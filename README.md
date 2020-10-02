@@ -29,4 +29,4 @@ _All parameters are optional_
 |-osk |makes osks from folders in the current directory||
 |-q |quiet mode, removes all prompts|`-dir` is required if `-q` and `-copy` are used|
 
-Note: _if `-copy` or `-osk` is not paired with `-q` the user will be prompted for the other option._
+Note: _if `-copy` or `-osk` is not paired with `-q` the user will be prompted for the other options._
