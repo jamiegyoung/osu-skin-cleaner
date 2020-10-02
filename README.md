@@ -1,6 +1,7 @@
 # osu-skin-cleaner
 
-A simple script to copy osu! skins to the current directory, remove the psd files, and then put them in an osk format
+A simple script to copy osu! skins to the current directory, remove the psd files, and then put them in an osk format.
+This was originally meant for personal use but I decided to upload it here.
 
 Order of operations:
 
@@ -12,11 +13,13 @@ Note: _passing parameters into the script in a different order will not affect t
 
 ## Example Usage
 
-`skincleaner.ps1 -dir "**Dir containing osu skins**"`
+Because of windows' execution policies it is a bit awkward to run an unsigned powershell script.
+Here is a cheap and dirty command to get it working using command prompt:
+`Powershell.exe -executionpolicy remotesigned -File .\skincleaner.ps1`
 
-`skincleaner.ps1 -q -osk`
+Examples of different parameters:
 
-`skincleaner.ps1 -q -copy -dir "**Dir containing osu skins**" `
+`skincleaner.ps1 -q -rpsd -osk -copy -dir "**Dir containing osu skins**" `
 
 ## Parameters
 

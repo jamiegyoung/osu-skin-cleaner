@@ -1,4 +1,3 @@
-
 param($dir)
 
 function Convert-Osk {
@@ -23,7 +22,17 @@ function Copy-Skins {
     }
   }
   if (Test-Path $dir) {
-    Copy-Item -Path "$dir\*" -Destination "./" -Recurse
+    $filecount = (Get-ChildItem "$dir" -Directory | Measure-Object).count
+    $counter = 0
+    Write-Progress -Activity "Copying Folders" -Status "$p% Complete: " -PercentComplete ($counter / $filecount * 100)
+    Get-ChildItem "$dir" -Directory | Foreach-Object {
+      $fullpath = $_.FullName
+      if (!(Test-Path -path "./$_/")) {New-Item "./$_/" -Type Directory | Out-Null}
+      Copy-Item -Path "$fullpath\*" -Destination "./$_/" -Recurse
+      $counter++
+      $percent = [math]::Ceiling($counter / $filecount * 100)
+      Write-Progress -Activity "Copying Folders" -Status "$percent% Complete: " -PercentComplete $percent
+    }
   }
   else {
     Write-Error 'Path does not exist'
@@ -36,32 +45,39 @@ function Remove-Psd {
   }
 }
 
-$quiet = $args.Contains('-q')
-if ($args -contains '-copy') {
-  Copy-Skins $quiet
-}
-elseif (-not $quiet) {
-  $copyanswer = Read-Host 'Copy the skin folders? [Y/N]'
-  if ($copyanswer.ToLower() -eq 'y') {
-    Copy-Skins $dir
-  } 
-}
-
-if ($args -contains '-rpsd') {
-  Remove-Psd
-} elseif (-not $quiet) {
-  $psdanswer = Read-Host 'Remove all psd files from all folders in the current directory and any folders inside? [Y/N]'
-  if ($psdanswer.ToLower() -eq 'y') {
-    Remove-Psd
+function Main {
+  param(
+    $programArgs
+  )
+  $quiet = $programArgs.Contains('-q')
+  if ($programArgs -contains '-copy') {
+    Copy-Skins $quiet
   }
-}
+  elseif (-not $quiet) {
+    $copyanswer = Read-Host 'Copy the skin folders? [Y/N]'
+    if ($copyanswer.ToLower() -eq 'y') {
+      Copy-Skins $dir
+    } 
+  }
 
-if ($args -contains '-osk') {
-  Convert-Osk
-}
-elseif (-not $quiet) {
-  $oskanswer = Read-Host 'Make osk files out of folders in the current directory? [Y/N]'
-  if ($oskanswer.ToLower() -eq 'y') {
+  if ($programArgs -contains '-rpsd') {
+    Remove-Psd
+  } elseif (-not $quiet) {
+    $psdanswer = Read-Host 'Remove all psd files from all folders in the current directory and any folders inside? [Y/N]'
+    if ($psdanswer.ToLower() -eq 'y') {
+      Remove-Psd
+    }
+  }
+
+  if ($programArgs -contains '-osk') {
     Convert-Osk
   }
+  elseif (-not $quiet) {
+    $oskanswer = Read-Host 'Make osk files out of folders in the current directory? [Y/N]'
+    if ($oskanswer.ToLower() -eq 'y') {
+      Convert-Osk
+    }
+  }
 }
+
+Main $args
