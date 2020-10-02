@@ -24,12 +24,15 @@ function Copy-Skins {
   }
   if (Test-Path $dir) {
     Copy-Item -Path "$dir\*" -Destination "./" -Recurse
-    Get-ChildItem "*.psd" -Recurse | ForEach-Object {
-      Remove-Item -Path "$_"
-    }
   }
   else {
     Write-Error 'Path does not exist'
+  }
+}
+
+function Remove-Psd {
+  Get-ChildItem "*.psd" -Recurse | ForEach-Object {
+    Remove-Item -Path "$_"
   }
 }
 
@@ -42,6 +45,15 @@ elseif (-not $quiet) {
   if ($copyanswer.ToLower() -eq 'y') {
     Copy-Skins $dir
   } 
+}
+
+if ($args -contains '-rpsd') {
+  Remove-Psd
+} elseif (-not $quiet) {
+  $psdanswer = Read-Host 'Remove all psd files from all folders in the current directory and any folders inside? [Y/N]'
+  if ($psdanswer.ToLower() -eq 'y') {
+    Remove-Psd
+  }
 }
 
 if ($args -contains '-osk') {
