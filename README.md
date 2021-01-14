@@ -26,7 +26,7 @@ Examples of different parameters:
 _All parameters are optional_
 |Name|Description|Notes|
 |----|-----------|-----|
-|-dir |the directory to copy the skins from|requires a path to be passed `-dir 'C:\Skins'`|
+|-dir |the directory to copy the skins from|requires a path to be passed `-dir "C:\Skins"`|
 |-copy|copies all folders in the given dir to the current directory||
 |-rpsd|removes all psd files from all folders in the current directory||
 |-osk |makes osks from folders in the current directory||
